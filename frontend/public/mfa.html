@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cruz Azul ERP - MFA</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Verificación MFA</h1>
+    <p>Ingrese el código de segundo factor para continuar.</p>
+
+    <label>Código MFA</label>
+    <input type="text" id="codigo" placeholder="123456">
+
+    <button onclick="validarMFA()">Validar código</button>
+
+    <p id="mensaje"></p>
+  </div>
+
+  <script>
+    async function validarMFA() {
+      const usuario = localStorage.getItem('usuario');
+      const codigo = document.getElementById('codigo').value;
+
+      const respuesta = await fetch('/api/mfa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, codigo })
+      });
+
+      const data = await respuesta.json();
+
+      if (data.ok) {
+        localStorage.setItem('token', data.token);
+        window.location.href = '/dashboard';
+      } else {
+        document.getElementById('mensaje').innerText = data.mensaje;
+      }
+    }
+  </script>
+</body>
+</html>

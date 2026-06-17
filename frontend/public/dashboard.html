@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cruz Azul ERP - Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="panel">
+    <h1>Dashboard Cruz Azul ERP</h1>
+
+    <div id="info"></div>
+
+    <button onclick="cargarRecurso()">Ver recurso protegido</button>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+
+    <h2>Datos protegidos desde RDS</h2>
+    <pre id="datos"></pre>
+  </div>
+
+  <script>
+    async function cargarDashboard() {
+      const token = localStorage.getItem('token');
+
+      const respuesta = await fetch('/api/dashboard-data', {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      const data = await respuesta.json();
+
+      if (!data.ok) {
+        window.location.href = '/';
+        return;
+      }
+
+      document.getElementById('info').innerHTML = `
+        <p><strong>Usuario:</strong> ${data.usuario}</p>
+        <p><strong>Rol:</strong> ${data.rol}</p>
+        <p><strong>Estado RDS:</strong> ${data.mensaje}</p>
+        <p><strong>Fecha servidor BD:</strong> ${data.fecha_servidor}</p>
+      `;
+    }
+
+    async function cargarRecurso() {
+      const token = localStorage.getItem('token');
+
+      const respuesta = await fetch('/api/recurso-protegido', {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      const data = await respuesta.json();
+      document.getElementById('datos').innerText = JSON.stringify(data, null, 2);
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/';
+    }
+
+    cargarDashboard();
+  </script>
+</body>
+</html>

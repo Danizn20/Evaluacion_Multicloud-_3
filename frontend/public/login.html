@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cruz Azul ERP - Login</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Cruz Azul ERP</h1>
+    <h2>Portal de Autenticación</h2>
+
+    <label>Usuario</label>
+    <input type="text" id="usuario" placeholder="admin">
+
+    <label>Contraseña</label>
+    <input type="password" id="password" placeholder="admin123">
+
+    <button onclick="login()">Ingresar</button>
+
+    <p id="mensaje"></p>
+  </div>
+
+  <script>
+    async function login() {
+      const usuario = document.getElementById('usuario').value;
+      const password = document.getElementById('password').value;
+
+      const respuesta = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, password })
+      });
+
+      const data = await respuesta.json();
+
+      if (data.ok) {
+        localStorage.setItem('usuario', usuario);
+        window.location.href = '/mfa.html';
+      } else {
+        document.getElementById('mensaje').innerText = data.mensaje;
+      }
+    }
+  </script>
+</body>
+</html>

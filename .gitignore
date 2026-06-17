@@ -1,0 +1,11 @@
+.env
+frontend/.env
+frontend/node_modules/
+node_modules/
+*.log
+backups/
+*.sql
+*.dump
+aws/
+awscliv2.zip
+.DS_Store
