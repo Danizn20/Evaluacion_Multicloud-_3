@@ -4,9 +4,10 @@ frontend/node_modules/
 node_modules/
 *.log
 backups/
-*.sql
 *.dump
 aws/
 awscliv2.zip
 .DS_Store
 database/.env
+backups/*.sql
+frontend/app.js.bak*
